@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, memo} from 'react';
 const generateTable = (number) => {
     const arr = []
     let startTime = performance.now();
@@ -10,19 +10,21 @@ const generateTable = (number) => {
     }
     return arr
 }
-// Here we can also use memoization to avoid generating the table again and again when the component re-renders. We can use useMemo hook for that. It will only re-generate the table when the num prop changes, otherwise it will return the cached value.
+// Here we are using memo to prevent unnecessary re-rendering of PrintTable component when the props have not changed. The generateTable function is called every time the component renders, which can be expensive if the number prop changes frequently. By using memo, we can ensure that the component only re-renders when the props actually change, improving performance.
 
-// We can also have momo from react to memoize the component itself, so that it only re-renders when the props change, otherwise it will return the cached component. This can be useful if the component is expensive to render and we want to avoid unnecessary re-renders.
-
-// then why we are here using useMemo instead of memo? because we want to memoize the result of the generateTable function, which is an array of JSX elements, and we want to avoid re-generating the table when the num prop does not change. If we use memo, it will only memoize the component itself, but it will still call the generateTable function every time the component re-renders, which can be expensive if the function is slow. By using useMemo, we can ensure that the generateTable function is only called when the num prop changes, and we can return the cached value when it does not change, which can improve the performance of our component.
-
-const PrintTable =(props) => {
-    const {num} = props
-    const table = useMemo(() => generateTable(num), [num])
+const PrintTable = memo((props) => {
+    const {num, obj, val, arr} = props
+    // const table = useMemo(() => generateTable(num), [num])
+    const table = generateTable(num)
     console.log(table)
     return <>
         {table}
+        {obj?.channel}
+        <br/>
+        {val}
+        <br/>
+        {arr?.map((item) => <span>{item}</span>)}
     </>
-}
+})
 
 export default PrintTable;
