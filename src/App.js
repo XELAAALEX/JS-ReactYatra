@@ -1,21 +1,15 @@
-import React, {useState, lazy, Suspense ,useMemo, useCallback, useEffect, useRef} from 'react';
+import React, {useState} from 'react';
+import { createPortal } from 'react-dom';
 import Button from './Button'
-const Text = lazy(() => delayForDemo(import('./Text.js')));
 
-function delayForDemo(promise) {
-    return new Promise(resolve => {
-      setTimeout(resolve, 2000);
-    }).then(() => promise);
-  }
 const App = () => {
-    const [showText, toggleText] = useState(false)
+    const [showModal, toggleModal] = useState(false);
 
     return <>
-        <button onClick={() => {toggleText((prev) => !prev)}}>Toggle Text</button>
-        
-        {showText && <Suspense fallback={<div>I am loading</div>}>
-            <Text>Hello guys!</Text>
-        </Suspense>}
+      Hey i am inside root <button onClick={() => toggleModal((prev) => !prev)}>Toggle Modal</button>
+
+      {showModal && createPortal(<div>This is modal content</div>, document.body)}
+      {/* {showModal && <div>This is modal content</div>} */}
     </>
 }
 
